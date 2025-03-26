@@ -17,39 +17,40 @@ proxyPort = int(args.port)
 try:
 # Create a server socket
 # ~~~~ INSERT CODE ~~~~
+    socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # ~~~~ END CODE INSERT ~~~~
-print ('Created socket')
+    print ('Created socket')
 except:
-print ('Failed to create socket')
-sys.exit()
+    print ('Failed to create socket')
+    sys.exit()
 try:
 # Bind the the server socket to a host and port
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
-print ('Port is bound')
+    print ('Port is bound')
 except:
-print('Port is already in use')
-sys.exit()
+    print('Port is already in use')
+    sys.exit()
 try:
 # Listen on the server socket
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
-print ('Listening to socket')
+    print ('Listening to socket')
 except:
-print ('Failed to listen')
-sys.exit()
+    print ('Failed to listen')
+    sys.exit()
 # continuously accept connections
 while True:
-print ('Waiting for connection...')
-clientSocket = None
+    print ('Waiting for connection...')
+    clientSocket = None
 # Accept connection from client and store in the clientSocket
 try:
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
-print ('Received a connection')
+    print ('Received a connection')
 except:
-print ('Failed to accept connection')
-sys.exit()
+    print ('Failed to accept connection')
+    sys.exit()
 # Get HTTP request from client
 # and store it in the variable: message_bytes
 # ~~~~ INSERT CODE ~~~~
@@ -77,43 +78,43 @@ hostname = resourceParts[0]
 resource = '/'
 if len(resourceParts) == 2:
 # Resource is absolute URI with hostname and resource
-resource = resource + resourceParts[1]
+    resource = resource + resourceParts[1]
 print ('Requested Resource:\t' + resource)
 # Check if resource is in cache
 try:
-cacheLocation = './' + hostname + resource
-if cacheLocation.endswith('/'):
-cacheLocation = cacheLocation + 'default'
-print ('Cache location:\t\t' + cacheLocation)
-fileExists = os.path.isfile(cacheLocation)
-# Check wether the file is currently in the cache
-cacheFile = open(cacheLocation, "r")
-cacheData = cacheFile.readlines()
-print ('Cache hit! Loading from cache file: ' + cacheLocation)
-# ProxyServer finds a cache hit
-# Send back response to client
-# ~~~~ INSERT CODE ~~~~
-# ~~~~ END CODE INSERT ~~~~
-cacheFile.close()
-print ('Sent to the client:')
-print ('> ' + cacheData)
+    cacheLocation = './' + hostname + resource
+    if cacheLocation.endswith('/'):
+        cacheLocation = cacheLocation + 'default'
+    print ('Cache location:\t\t' + cacheLocation)
+    fileExists = os.path.isfile(cacheLocation)
+    # Check wether the file is currently in the cache
+    cacheFile = open(cacheLocation, "r")
+    cacheData = cacheFile.readlines()
+    print ('Cache hit! Loading from cache file: ' + cacheLocation)
+    # ProxyServer finds a cache hit
+    # Send back response to client
+    # ~~~~ INSERT CODE ~~~~
+    # ~~~~ END CODE INSERT ~~~~
+    cacheFile.close()
+    print ('Sent to the client:')
+    print ('> ' + cacheData)
 except:
 # cache miss. Get resource from origin server
-originServerSocket = None
+    originServerSocket = None
 # Create a socket to connect to origin server
 # and store in originServerSocket
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
-print ('Connecting to:\t\t' + hostname + '\n')
+    print ('Connecting to:\t\t' + hostname + '\n')
 try:
 # Get the IP address for a hostname
-address = socket.gethostbyname(hostname)
+    address = socket.gethostbyname(hostname)
 # Connect to the origin server
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
-print ('Connected to origin Server')
-originServerRequest = ''
-originServerRequestHeader = ''
+    print ('Connected to origin Server')
+    originServerRequest = ''
+    originServerRequestHeader = ''
 # Create origin server request line and headers to send
 # and store in originServerRequestHeader and originServerRequest
 # originServerRequest is the first line in the request and
@@ -121,18 +122,20 @@ originServerRequestHeader = ''
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
 # Construct the request to send to the origin server
-request = originServerRequest + '\r\n' + originServerRequestHeader + '\r\n\r\
+    request = originServerRequest + '\r\n' + originServerRequestHeader + '\r\n\r\
 n'
 # Request the web resource from origin server
-print ('Forwarding request to origin server:')
-for line in request.split('\r\n'):
-print ('> ' + line)
+except:
+    print ('Forwarding request to origin server:')
+    for line in request.split('\r\n'):
+        print ('> ' + line)
 try:
-originServerSocket.sendall(request.encode())
+    originServerSocket.sendall(request.encode())
 except socket.error:
-print ('Forward request to origin failed')
-sys.exit()
-print('Request sent to origin server\n')
+    print ('Forward request to origin failed')
+    sys.exit()
+    print('Request sent to origin server\n')
+try:
 # Get the response from the origin server
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
@@ -140,24 +143,25 @@ print('Request sent to origin server\n')
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
 # Create a new file in the cache for the requested file.
-cacheDir, file = os.path.split(cacheLocation)
-print ('cached directory ' + cacheDir)
-if not os.path.exists(cacheDir):
-os.makedirs(cacheDir)
-cacheFile = open(cacheLocation, 'wb')
+    cacheDir, file = os.path.split(cacheLocation)
+    print ('cached directory ' + cacheDir)
+    if not os.path.exists(cacheDir):
+        os.makedirs(cacheDir)
+        cacheFile = open(cacheLocation, 'wb')
 # Save origin server response in the cache file
 # ~~~~ INSERT CODE ~~~~
 # ~~~~ END CODE INSERT ~~~~
-cacheFile.close()
-print ('cache file closed')
+    cacheFile.close()
+    print ('cache file closed')
 # finished communicating with origin server - shutdown socket writes
-print ('origin response received. Closing sockets')
-originServerSocket.close()
-clientSocket.shutdown(socket.SHUT_WR)
-print ('client socket shutdown for writing')
+    print ('origin response received. Closing sockets')
+    originServerSocket.close()
+    clientSocket.shutdown(socket.SHUT_WR)
+    print ('client socket shutdown for writing')
 except OSError as err:
-print ('origin server request failed. ' + err.strerror)
+    print ('origin server request failed. ' + err.strerror)
+
 try:
-clientSocket.close()
+    clientSocket.close()
 except:
-print ('Failed to close client socket')
+    print ('Failed to close client socket')
