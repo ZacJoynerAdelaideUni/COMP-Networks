@@ -118,6 +118,7 @@ try:
     address = socket.gethostbyname(hostname)
 # Connect to the origin server
 # ~~~~ INSERT CODE ~~~~
+    originServerSocket.connect((addressm, 80))
 # ~~~~ END CODE INSERT ~~~~
     print ('Connected to origin Server')
     originServerRequest = ''
