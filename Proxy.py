@@ -110,7 +110,7 @@ except:
 # Create a socket to connect to origin server
 # and store in originServerSocket
 # ~~~~ INSERT CODE ~~~~
-    
+    originServerSocket = serverSocket(socket.AF_INET, socket.SOCK_STREAM)
 # ~~~~ END CODE INSERT ~~~~
     print ('Connecting to:\t\t' + hostname + '\n')
 try:
