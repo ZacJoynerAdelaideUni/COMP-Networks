@@ -98,7 +98,8 @@ try:
     # ProxyServer finds a cache hit
     # Send back response to client
     # ~~~~ INSERT CODE ~~~~
-    
+    for line in cacheData:
+        clientSocket.sendall(line.encode())
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
@@ -109,6 +110,7 @@ except:
 # Create a socket to connect to origin server
 # and store in originServerSocket
 # ~~~~ INSERT CODE ~~~~
+    
 # ~~~~ END CODE INSERT ~~~~
     print ('Connecting to:\t\t' + hostname + '\n')
 try:
