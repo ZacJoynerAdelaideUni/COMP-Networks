@@ -35,6 +35,7 @@ except:
 try:
 # Listen on the server socket
 # ~~~~ INSERT CODE ~~~~
+    serverSocket.listen()
 # ~~~~ END CODE INSERT ~~~~
     print ('Listening to socket')
 except:
@@ -47,6 +48,7 @@ while True:
 # Accept connection from client and store in the clientSocket
 try:
 # ~~~~ INSERT CODE ~~~~
+    clientSocket, addr = serverSocket.accept()
 # ~~~~ END CODE INSERT ~~~~
     print ('Received a connection')
 except:
@@ -55,6 +57,7 @@ except:
 # Get HTTP request from client
 # and store it in the variable: message_bytes
 # ~~~~ INSERT CODE ~~~~
+message_bytes = clientSocket.recv(BUFFER_SIZE)
 # ~~~~ END CODE INSERT ~~~~
 message = message_bytes.decode('utf-8')
 print ('Received request:')
@@ -95,6 +98,7 @@ try:
     # ProxyServer finds a cache hit
     # Send back response to client
     # ~~~~ INSERT CODE ~~~~
+    
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
