@@ -128,6 +128,8 @@ try:
 # originServerRequest is the first line in the request and
 # originServerRequestHeader is the second line in the request
 # ~~~~ INSERT CODE ~~~~
+    originServerRequest = f"{method} {resource} {version}\r\n"
+    originServerRequestHeader = f"Host: {hostname}\r\nConnection: close\r\n"
 # ~~~~ END CODE INSERT ~~~~
 # Construct the request to send to the origin server
     request = originServerRequest + '\r\n' + originServerRequestHeader + '\r\n\r\
@@ -146,9 +148,16 @@ except socket.error:
 try:
 # Get the response from the origin server
 # ~~~~ INSERT CODE ~~~~
+    response = b""
+    while True:
+        chunk = originServerSocket.recv(BUFFER_SIZE)
+        if not chunk:
+            break
+        response += chunk
 # ~~~~ END CODE INSERT ~~~~
 # Send the response to the client
 # ~~~~ INSERT CODE ~~~~
+    clientSocket.sendall(response)
 # ~~~~ END CODE INSERT ~~~~
 # Create a new file in the cache for the requested file.
     cacheDir, file = os.path.split(cacheLocation)
