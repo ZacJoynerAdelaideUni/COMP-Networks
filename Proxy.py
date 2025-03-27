@@ -110,7 +110,7 @@ except:
 # Create a socket to connect to origin server
 # and store in originServerSocket
 # ~~~~ INSERT CODE ~~~~
-    originServerSocket = serverSocket(socket.AF_INET, socket.SOCK_STREAM)
+    originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # ~~~~ END CODE INSERT ~~~~
     print ('Connecting to:\t\t' + hostname + '\n')
 try:
@@ -118,7 +118,8 @@ try:
     address = socket.gethostbyname(hostname)
 # Connect to the origin server
 # ~~~~ INSERT CODE ~~~~
-    originServerSocket.connect((addressm, 80))
+    originServerSocket.connect((address, 80))
+    print(f"Connected to origin server {hostname} ({address})")
 # ~~~~ END CODE INSERT ~~~~
     print ('Connected to origin Server')
     originServerRequest = ''
@@ -148,12 +149,22 @@ except socket.error:
 try:
 # Get the response from the origin server
 # ~~~~ INSERT CODE ~~~~
+    originServerSocket.settimeout(2)
     response = b""
     while True:
-        chunk = originServerSocket.recv(BUFFER_SIZE)
-        if not chunk:
+        try:
+            chunk = originServerSocket.recv(BUFFER_SIZE)
+            if not chunk:  # If no more data, stop receiving
+                print("Received empty chunk, stopping.")
+                break
+            response += chunk
+            print(f"Received chunk of size {len(chunk)} bytes")
+        except socket.timeout:  # If timeout occurs, break
+            print("Socket timeout reached, stopping.")
             break
-        response += chunk
+        except Exception as e:  # Catch unexpected issues
+            print(f"Error while receiving: {e}")
+            break
 # ~~~~ END CODE INSERT ~~~~
 # Send the response to the client
 # ~~~~ INSERT CODE ~~~~
@@ -167,7 +178,7 @@ try:
         cacheFile = open(cacheLocation, 'wb')
 # Save origin server response in the cache file
 # ~~~~ INSERT CODE ~~~~
-    cahceFile.write(response)
+    cacheFile.write(response)
 # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('cache file closed')
