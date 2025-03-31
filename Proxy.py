@@ -63,7 +63,6 @@ requestParts = message.split()
 if len(requestParts) < 3:  # Ensure valid request format
     print('Malformed HTTP request, closing connection.')
     clientSocket.close()
-    continue
 
 method = requestParts[0]
 URI = requestParts[1]
@@ -174,7 +173,6 @@ try:
         print("No response received from origin server")
         clientSocket.close()
         originServerSocket.close()
-        continue
 
     clientSocket.sendall(response)
     print("Response sent to client")
