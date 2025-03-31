@@ -142,7 +142,10 @@ except:
     for line in request.split('\r\n'):
         print ('> ' + line)
 try:
+    print("Final request being sent to origin server:")
+    print(request)
     originServerSocket.sendall(request.encode())
+    print("Request sent successfully")
 except socket.error:
     print ('Forward request to origin failed')
     sys.exit()
@@ -155,15 +158,15 @@ try:
     while True:
         try:
             chunk = originServerSocket.recv(BUFFER_SIZE)
-            if not chunk:  # If no more data, stop receiving
+            if not chunk:
                 print("Received empty chunk, stopping.")
                 break
             response += chunk
             print(f"Received chunk of size {len(chunk)} bytes")
-        except socket.timeout:  # If timeout occurs, break
+        except socket.timeout:
             print("Socket timeout reached, stopping.")
             break
-        except Exception as e:  # Catch unexpected issues
+        except Exception as e:
             print(f"Error while receiving: {e}")
             break
 # ~~~~ END CODE INSERT ~~~~
@@ -173,6 +176,10 @@ try:
         print("No response received from origin server")
         clientSocket.close()
         originServerSocket.close()
+    else:
+        print(f"Response received from origin server:\n{response[:500]}") 
+        clientSocket.sendall(response)
+        print("Response sent to client")
 
     clientSocket.sendall(response)
     print("Response sent to client")
