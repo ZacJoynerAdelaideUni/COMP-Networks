@@ -67,6 +67,7 @@ if len(requestParts) < 3:  # Ensure valid request format
 method = requestParts[0]
 URI = requestParts[1]
 version = requestParts[2]
+print(f"Extracted Method: {method}, URI: {URI}, Version: {version}")
 print ('Method:\t\t' + method)
 print ('URI:\t\t' + URI)
 print ('Version:\t' + version)
@@ -74,6 +75,7 @@ print ('')
 # Get the requested resource from URI
 # Remove http protocol from the URI
 URI = re.sub('^(/?)http(s?)://', '', URI, count=1)
+print(f"Sanitized URI: {URI}")
 # Remove parent directory changes - security
 URI = URI.replace('/..', '')
 # Split hostname from resource name
@@ -83,7 +85,8 @@ resource = '/'
 if len(resourceParts) == 2:
 # Resource is absolute URI with hostname and resource
     resource = resource + resourceParts[1]
-print ('Requested Resource:\t' + resource)
+print('Requested Resource:\t' + resource)
+print(f"Parsed Hostname: {hostname}, Resource: {resource}")
 # Check if resource is in cache
 try:
     cacheLocation = './' + hostname + resource
@@ -134,8 +137,9 @@ try:
     originServerRequestHeader = f"Host: {hostname}\r\nConnection: close\r\n\r\n"
 # ~~~~ END CODE INSERT ~~~~
 # Construct the request to send to the origin server
-    request = originServerRequest + originServerRequestHeader + '\r\n\r\
-n'
+    request = originServerRequest + originServerRequestHeader 
+    print("Final request being sent to origin server:")
+    print(request)
 # Request the web resource from origin server
 except:
     print ('Forwarding request to origin server:')
