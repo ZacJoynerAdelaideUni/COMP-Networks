@@ -43,17 +43,13 @@ except:
     sys.exit()
 # continuously accept connections
 while True:
-    print ('Waiting for connection...')
-    clientSocket = None
-# Accept connection from client and store in the clientSocket
-try:
-# ~~~~ INSERT CODE ~~~~
-    clientSocket, addr = serverSocket.accept()
-# ~~~~ END CODE INSERT ~~~~
-    print ('Received a connection')
-except:
-    print ('Failed to accept connection')
-    sys.exit()
+    print('Waiting for connection...')
+    try:
+        clientSocket, addr = serverSocket.accept()
+        print(f'Received a connection from {addr}')
+    except Exception as e:
+        print(f'Failed to accept connection: {e}')
+        continue
 # Get HTTP request from client
 # and store it in the variable: message_bytes
 # ~~~~ INSERT CODE ~~~~
@@ -149,7 +145,7 @@ except socket.error:
 try:
 # Get the response from the origin server
 # ~~~~ INSERT CODE ~~~~
-    originServerSocket.settimeout(2)
+    originServerSocket.settimeout(10)
     response = b""
     while True:
         try:
