@@ -60,6 +60,11 @@ print ('Received request:')
 print ('< ' + message)
 # Extract the method, URI and version of the HTTP client request
 requestParts = message.split()
+if len(requestParts) < 3:  # Ensure valid request format
+    print('Malformed HTTP request, closing connection.')
+    clientSocket.close()
+    continue
+
 method = requestParts[0]
 URI = requestParts[1]
 version = requestParts[2]
@@ -127,7 +132,7 @@ try:
 # originServerRequestHeader is the second line in the request
 # ~~~~ INSERT CODE ~~~~
     originServerRequest = f"{method} {resource} {version}\r\n"
-    originServerRequestHeader = f"Host: {hostname}\r\nConnection: close\r\n"
+    originServerRequestHeader = f"Host: {hostname}\r\nConnection: close\r\n\r\n"
 # ~~~~ END CODE INSERT ~~~~
 # Construct the request to send to the origin server
     request = originServerRequest + originServerRequestHeader + '\r\n\r\
@@ -165,7 +170,14 @@ try:
 # ~~~~ END CODE INSERT ~~~~
 # Send the response to the client
 # ~~~~ INSERT CODE ~~~~
+    if not response:
+        print("No response received from origin server")
+        clientSocket.close()
+        originServerSocket.close()
+        continue
+
     clientSocket.sendall(response)
+    print("Response sent to client")
 # ~~~~ END CODE INSERT ~~~~
 # Create a new file in the cache for the requested file.
     cacheDir, file = os.path.split(cacheLocation)
