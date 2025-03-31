@@ -114,6 +114,7 @@ try:
     address = socket.gethostbyname(hostname)
 # Connect to the origin server
 # ~~~~ INSERT CODE ~~~~
+    originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     originServerSocket.connect((address, 80))
     print(f"Connected to origin server {hostname} ({address})")
 # ~~~~ END CODE INSERT ~~~~
@@ -129,7 +130,7 @@ try:
     originServerRequestHeader = f"Host: {hostname}\r\nConnection: close\r\n"
 # ~~~~ END CODE INSERT ~~~~
 # Construct the request to send to the origin server
-    request = originServerRequest + '\r\n' + originServerRequestHeader + '\r\n\r\
+    request = originServerRequest + originServerRequestHeader + '\r\n\r\
 n'
 # Request the web resource from origin server
 except:
